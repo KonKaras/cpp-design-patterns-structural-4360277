@@ -34,7 +34,7 @@ class LegacyComponent
 public:
     void go()
     {
-        cout << "Executing LegacyComponent::go()" << endl;
+        cout << "Executing LegacyComponent::go() to demonstrate Adapter pattern" << endl;
     }    
 };
 
