@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <sstream>
 
 using namespace std;
 
@@ -41,27 +42,38 @@ public:
     }
 };
 
+class WeatherFacade {
+    public:
+        WeatherFacade(): worldWeather(), freeWeather(), realTimeWeatherService() {}
+        string currentWeather(string location){
+            const tuple<float, float, string> worldWeatherResult = worldWeather.getWeather(location);
+            const tuple<float, string> freeWeatherResult = freeWeather.retrieve_weather(location);
+            const tuple<float, float, string> realtimeWeatherResult = realTimeWeatherService.weatherConditions(location);
+
+            const float temperature = get<0>(worldWeatherResult);
+            const float humidity = get<1>(realtimeWeatherResult);
+            const string shortDescription = get<1>(freeWeatherResult);
+
+            stringstream result;
+            result << "\nWeather for " << location << endl
+                 << shortDescription << endl
+                 << "Temperature: " << temperature << " C" << endl
+                 << "Humidity: " << humidity << " %" << endl;
+            return result.str();
+        }
+    private:
+        WorldWeatherAPI worldWeather;
+        FreeWeather freeWeather;
+        RealtimeWeatherService realTimeWeatherService;
+
+};
+
 int main()
 {
-    WorldWeatherAPI worldWeather;
-    FreeWeather freeWeather;
-    RealtimeWeatherService realtimeWeather;
-
+    WeatherFacade weatherFacade;
     auto const location = "San Francisco, CA, US";
     // Call each API and combine the results
-    tuple<float, float, string> worldWeatherResult = worldWeather.getWeather(location);
-    tuple<float, string> freeWeatherResult = freeWeather.retrieve_weather(location);
-    tuple<float, float, string> realtimeWeatherResult = realtimeWeather.weatherConditions(location);
-
-    // Combine the results into a single string
-    float temperature = get<0>(worldWeatherResult);
-    float humidity = get<1>(realtimeWeatherResult);
-    string shortDescription = get<1>(freeWeatherResult);
-
-    cout << "\nWeather for " << location << endl
-         << shortDescription << endl
-         << "Temperature: " << temperature << " C" << endl
-         << "Humidity: " << humidity << " %" << endl;
+    cout << weatherFacade.currentWeather(location); << endl;
 
     return 0;
 }

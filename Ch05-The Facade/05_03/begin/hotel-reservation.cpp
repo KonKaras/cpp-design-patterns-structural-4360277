@@ -34,19 +34,33 @@ public:
     }
 };
 
+class ReserationSystemFacade
+{
+    public:
+        ReserationSystemFacade() : m_database(), m_paymentGateway(), m_messagingService() {}
+        void makeReservation(const string &reservation, const string &paymentInfo)
+        {
+            m_database.storeReservation(reservation);
+            m_paymentGateway.processPayment(paymentInfo);
+            m_messagingService.sendConfirmation("Reservation confirmed.");
+        }
+
+    private:
+        Database m_database;
+        PaymentGateway m_paymentGateway;
+        MessagingService m_messagingService;
+};
+
 int main()
 {
-    Database db;
-    PaymentGateway paymentGateway;
-    MessagingService messagingService;
+    ReserationSystemFacade reservationSystem;
 
     const string reservation = "Room reservation info";
-    db.storeReservation(reservation);
 
     const string paymentInfo = "Payment info";
-    paymentGateway.processPayment(paymentInfo);
 
-    messagingService.sendConfirmation("Reservation confirmed.");
+    reservationSystem.makeReservation(reservation, paymentInfo);
+
 
     return 0;
 }

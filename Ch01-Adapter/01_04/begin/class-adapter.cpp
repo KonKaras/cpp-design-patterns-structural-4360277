@@ -49,6 +49,17 @@ public:
     }
 };
 
+class LegaceClassAdapter: public Component, private LegacyComponent
+{
+public:
+    virtual void run() override
+    {
+        cout << "LegacyClassAdapter::run() -> calling LegacyComponent::go()" << endl;
+        go();
+    }
+};
+
+
 
 int main()
 {    

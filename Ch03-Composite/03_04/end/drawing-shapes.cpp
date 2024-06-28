@@ -4,6 +4,28 @@
 
 using namespace std;
 
+class CompositeShape: public Shape
+{
+    public:
+        void draw() const override
+        {
+            for (const auto &shape : m_Shapes)
+            {
+                shape->draw();
+            }
+        }
+        void addShape(Shape *shape)
+        {
+            m_Shapes.push_back(shape);
+        }
+        void removeShape(Shape *shape)
+        {
+            m_Shapes.erase(std::remove(m_Shapes.begin(), m_Shapes.end(), shape), m_Shapes.end());
+        }
+    private:
+        std::vector<Shape*> m_Shapes;
+};
+
 // Abstract base class for concrete Shape classes
 class Shape
 {

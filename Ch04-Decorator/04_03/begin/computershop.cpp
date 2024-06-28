@@ -39,61 +39,48 @@ public:
     }
 };
 
-// Upgrades
-class DesktopWithMemoryUpgrade : public Desktop
+class ComputerDecorator : public Computer
 {
-public:
-    string description() const override
-    {
-        return "Desktop with memory upgrade";
-    }
-
-    double price() const override
-    {
-        return 1700.0;
-    }
+    public:
+        explicit ComputerDecorator(Computer *computer) : m_Computer(computer) {}
+        string description() const override
+        {
+            return m_Computer->description();
+        }
+        double price() const override
+        {
+            return m_Computer->price();
+        }
+    protected:
+        Computer *m_Computer;
 };
 
-class LaptopWithMemoryUpgrade : public Laptop
+class MemoryUpgradeDecorator : public ComputerDecorator
 {
-public:
-    string description() const override
-    {
-        return "Laptop with memory upgrade";
-    }
-
-    double price() const override
-    {
-        return 2000.0;
-    }
+    public:
+        explicit MemoryUpgradeDecorator(Computer *computer) : ComputerDecorator(computer) {}
+        string description() const override
+        {
+            return m_Computer->description() + " with memory upgrade";
+        }
+        double price() const override
+        {
+            return m_Computer->price() + 50.0;
+        }
 };
 
-class DesktopWithGraphicsUpgrade : public Desktop
+class GraphicsCardDecorator : public ComputerDecorator
 {
-public:
-    string description() const override
-    {
-        return "Desktop with graphics upgrade";
-    }
-
-    double price() const override
-    {
-        return 2000.0;
-    }
-};
-
-class LaptopWithGraphicsUpgrade : public Laptop
-{
-public:
-    string description() const override
-    {
-        return "Laptop with graphics upgrade";
-    }
-
-    double price() const override
-    {
-        return 2700.0;
-    }
+    public:
+        explicit GraphicsCardDecorator(Computer *computer) : ComputerDecorator(computer) {}
+        string description() const override
+        {
+            return m_Computer->description() + " with graphics card";
+        }
+        double price() const override
+        {
+            return m_Computer->price() + 100.0;
+        }
 };
 
 int main()
@@ -101,27 +88,6 @@ int main()
     Computer *desktop = new Desktop();
     cout << desktop->description() << " costs $" << desktop->price() << endl;
 
-    Computer *laptop = new Laptop();
-    cout << laptop->description() << " costs $" << laptop->price() << endl;
-
-    Computer *desktopGraphicsUpgrade = new DesktopWithGraphicsUpgrade();
-    cout << desktopGraphicsUpgrade->description() << " costs $" << desktopGraphicsUpgrade->price() << endl;
-
-    Computer *desktopMemoryUpgrade = new DesktopWithMemoryUpgrade();
-    cout << desktopMemoryUpgrade->description() << " costs $" << desktopMemoryUpgrade->price() << endl;
-
-    Computer *laptopGraphicsUpgrade = new LaptopWithGraphicsUpgrade();
-    cout << laptopGraphicsUpgrade->description() << " costs $" << laptopGraphicsUpgrade->price() << endl;
-
-    Computer *laptopMemoryUpgrade = new LaptopWithMemoryUpgrade();
-    cout << laptopMemoryUpgrade->description() << " costs $" << laptopMemoryUpgrade->price() << endl;
-
-    delete desktop;
-    delete laptop;
-    delete desktopGraphicsUpgrade;
-    delete desktopMemoryUpgrade;
-    delete laptopGraphicsUpgrade;
-    delete laptopMemoryUpgrade;
 
     return 0;
 }

@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <string>
+#include <unordered_map>
 
 using namespace std;
 
@@ -25,7 +27,18 @@ private:
 class Sprite
 {
 public:
-    Sprite(int width, int height, int x, int y, const string &textureFileName) : m_Width(width), m_Height(height), m_X(x), m_Y(y), m_Texture(new Texture(textureFileName)) {}
+    Sprite(const Texture *texture) : m_Texture(texture) {
+        cout << "Constructing sprite with texture: " << m_Texture->description() << endl;
+    }
+
+    void setPositionSize(int x, int y, int width, int height)
+    {
+        // set position and size
+        m_X = x;
+        m_Y = y;
+        m_Width = width;
+        m_Height = height;
+    }
 
     void render()
     {
@@ -33,20 +46,31 @@ public:
         cout << "Rendering sprite with texture: " << m_Texture->description() << endl;
     }
 
-    ~Sprite()
-    {
-        cout << "Destructing sprite with texture " << m_Texture->description() << endl;
-        delete m_Texture;
-    }
-
 private:
-    const int m_Width;
-    const int m_Height;
-    const int m_X;
-    const int m_Y;
+     int m_Width;
+     int m_Height;
+     int m_X;
+     int m_Y;
 
     const Texture *m_Texture;
 };
+
+class SpriteFactory
+{
+    public:
+        Sprite* makeSprite(const string &fileName){
+            auto it = m_SpritePool.find(fileName);
+            if(it != m_SpritePool.end()){
+                return it->second;
+            }else{
+
+            }
+        }
+    private:
+        unordered_map<string, Sprite*> m_SpritePool;
+};
+
+
 
 int main()
 {

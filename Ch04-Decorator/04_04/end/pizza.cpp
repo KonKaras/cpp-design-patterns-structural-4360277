@@ -51,6 +51,53 @@ public:
     }
 };
 
+class PizzaDecorator : public Pizza
+{
+    public:
+        explicit PizzaDecorator(unique_ptr<Pizza> pizza) : m_Pizza(move(pizza)) {}
+        string description() const override
+        {
+            return m_Pizza->description();
+        }
+        double price() const override
+        {
+            return m_Pizza->price();
+        }
+
+        virtual ~PizzaDecorator() = default;
+    
+    protected:
+        const unique_ptr<Pizza> m_Pizza;
+};
+
+class MushroomDecorator : public PizzaDecorator
+{
+    public:
+        explicit MushroomDecorator(unique_ptr<Pizza> *pizza) : PizzaDecorator(move(pizza)) {}
+        string description() const override
+        {
+            return m_Pizza->description() + " with mushrooms";
+        }
+        double price() const override
+        {
+            return m_Pizza->price() + 1.0;
+        }
+};
+
+class CheeseDecorator : public PizzaDecorator
+{
+    public:
+        explicit CheeseDecorator(Pizza *pizza) : PizzaDecorator(pizza) {}
+        string description() const override
+        {
+            return m_Pizza->description() + " with extra cheese";
+        }
+        double price() const override
+        {
+            return m_Pizza->price() + 1.5;
+        }
+};
+
 int main()
 {
     const std::unique_ptr<Pizza> pizzas[]{
